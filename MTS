@@ -1,0 +1,141 @@
+Question 1
+app.component.ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  title = "MOBILE SHOPPING";
+  ProductTitle:string="SAMSUNG";
+  Price:number=4000;
+  stock:number=4;
+  imageLocation='https://m.media-amazon.com/images/I/41ZGJxnJu1S.jpg';
+ 
+}
+
+app.component.html
+
+<div class="panel panel-default" style="width:900px">
+    <div class="panel-body">
+      <div class="card" style="margin-left:400px; margin-top:50px">
+         <img [src]="imageLocation" width="50%" height="50%" style="padding:15px">
+        <div class="card-body">
+         <h4>Category: {{ProductTitle}}</h4>
+         <h4>price: {{Price}}</h4>
+         <h4>Stock: {{stock}}</h4>
+        </div>
+     
+        <button type="button" style="background-color:blue;color:whitesmoke;width:150px;margin-left:180px;margin-bottom:20px">ADD TO CART</button>
+     </div>
+     </div>
+     
+     
+  QUESTION 3
+  
+  app.component.ts
+  import { Component } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {product} from './product';
+
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  myform:FormGroup
+  products: product[]=[];
+  constructor(){
+    this.myform=new FormGroup({
+      pname:new FormControl(null,[Validators.required]),
+      pbrand:new FormControl(null,[Validators.required]),
+      pprice:new FormControl(null,[Validators.required])
+    });
+  }
+  get name(){
+    return this.myform.get('pname');
+  }
+  get brand(){
+    return this.myform.get('pbrand');
+  }
+  get price(){
+    return this.myform.get('pprice');
+  }
+  store(){
+    this.products.push(new product(this.myform.value.pname,this.myform.value.pbrand,this.myform.value.pprice))
+    console.log(this.products) 
+    this.myform.reset();
+
+
+  }
+}
+
+product.ts
+
+export class product{
+    pname:string;
+    pbrand:string;
+    pprice:number;
+    constructor(pname,pbrand,pprice){
+        this.pname=pname;
+        this.pbrand=pbrand;
+        this.pprice=pprice;
+    }
+}
+
+app.component.html
+
+<div class="container">
+    <h3>PRODUCT DETAILS</h3>
+    <form [formGroup]="myform" (ngSubmit)="store()">
+        <div class="form-group" >
+            <label for="pname">PRODUCT NAME</label>
+            <input type="text" class="form-control" id="pname"  formControlName="pname">
+            <small style="color:red" *ngIf="pname && pname.invalid && pname.touched">*PRODUCT NAME  IS REQUIRED</small> 
+          </div>
+
+          <div class="form-group">
+            <label for="pbrand">PRODUCT BRAND</label>
+            <input type="text" class="form-control" id="pbrand" formControlName="pbrand">
+            <div *ngIf="pbrand.touched && pbrand.invalid">
+            <small style="color:red" *ngIf="pbrand.errors.required">*PRODUCT BRAND IS REQUIRED</small><br/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="pprice">PRODUCT PRICE</label>
+            <input type="text" class="form-control" id="pprice" formControlName="pprice">
+            <div *ngIf="pprice.touched && pprice.invalid">
+            <small style="color:red" *ngIf="pprice.errors.required">*PRICE IS REQUIRED</small><br/>
+    
+          </div>
+          </div>
+          <button class="btn btn-primary" [disabled]="emsform.invalid">Submit</button>
+    </form>        
+</div>
+
+
+<div style="margin-top:10px;">
+             <div class="productdetails">
+                 <table class="table">
+                    <thead class="thead-light">
+                      <tr>
+                        <th> PRODUCT NAME</th>
+                        <th>PRODUCT BRAND</th>
+                        <th> PRODUCT PRICE</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td> {{pname}}</td>
+                        <td>  {{pbrand}}</td>
+                        <td>  {{pprice}}</td>
+                      </tr>
+                    </tbody>
+                 </table>
+             </div>
+</div>
+ 
